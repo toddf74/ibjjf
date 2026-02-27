@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Daily Checklist (Mar 2 → Apr 17, 2026)</title>
+  <title>Daily Checklist (Mar 3 → Apr 17, 2026)</title>
   <style>
     :root { --bg:#0b0c10; --card:#12141a; --text:#e8eaf0; --muted:#a9afbf; --accent:#7aa2ff; --border:#222734; --ok:#37d67a; --danger:#ff5c5c; --today:#1c2440; }
     body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; background:var(--bg); color:var(--text); }
@@ -25,7 +25,6 @@
     .item { display:flex; gap:10px; align-items:flex-start; margin:8px 0; }
     .item input { margin-top:3px; transform:scale(1.15); }
     .item label { cursor:pointer; line-height:1.35; color:var(--muted); }
-    .item label b { color:var(--text); font-weight:600; }
     .tag { display:inline-block; font-size:11px; padding:4px 8px; border-radius:999px; border:1px solid var(--border); color:var(--muted); }
     .tag.ok { color:var(--ok); border-color: rgba(55,214,122,.35); }
     .tag.accent { color:var(--accent); border-color: rgba(122,162,255,.35); }
@@ -39,16 +38,13 @@
     .split { display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
     .print-hint { font-size:12px; color:var(--muted); }
 
-    /* PRINT: hide everything except selected week */
     @media print {
       header, .card.top, .controls, .progress { display:none !important; }
       body { background:white !important; color:black !important; }
-      .week { page-break-inside: avoid; }
-      .week { border:1px solid #aaa !important; }
+      .week { page-break-inside: avoid; border:1px solid #aaa !important; }
       .day { border:1px solid #ccc !important; background:white !important; color:black !important; }
       .item label { color:#111 !important; }
       .week h2 { background:#f2f2f2 !important; color:#111 !important; border-bottom:1px solid #ccc !important; }
-      /* if data-print-week is set, hide all other weeks */
       body[data-print-week] .week { display:none !important; }
       body[data-print-week] .week.print-target { display:block !important; }
       a { color:black !important; text-decoration:none !important; }
@@ -59,7 +55,7 @@
 <header>
   <div class="wrap">
     <div>
-      <h1>Daily Checklist — Mar 2 → Apr 17, 2026</h1>
+      <h1>Daily Checklist — Mar 3 → Apr 17, 2026</h1>
       <div class="sub">Saved locally on this device/browser. <a class="btn" href="index.html">← Overview</a></div>
     </div>
     <div class="controls">
@@ -78,13 +74,13 @@
     <div class="split">
       <div class="pillrow">
         <span class="tag ok">Daily Shoulder Routine</span>
-        <span class="tag ok">Daily Walk 30+ min</span>
+        <span class="tag ok">Daily Walk (during the day)</span>
         <span class="tag accent">Tue/Thu Knee Block</span>
         <span class="tag accent">Thu Intervals</span>
         <span class="tag accent">Fri Zone 2</span>
         <span class="tag">JJ Mon/Wed (+ Sat optional)</span>
       </div>
-      <div class="sticky-note">Pain rules: Shoulder pressing ≤3/10; Knee ≤3/10 + next morning same/better.</div>
+      <div class="sticky-note">Walks are scheduled during the day on JJ days (no after-JJ walking).</div>
     </div>
     <div class="print-hint" style="margin-top:10px;">Tip: “Print week” prints only the chosen week. Your checked boxes can be printed too.</div>
   </section>
@@ -94,7 +90,7 @@
 
 <script>
 const YEAR = 2026;
-const KEY = "plan_2026_mar2_apr17_checks_v2";
+const KEY = "plan_2026_mar3_apr17_checks_v1";
 
 /** Storage */
 const state = JSON.parse(localStorage.getItem(KEY) || "{}");
@@ -102,287 +98,308 @@ function save(){ localStorage.setItem(KEY, JSON.stringify(state)); renderProgres
 function setChecked(id, val){ state[id] = !!val; save(); }
 function isChecked(id){ return !!state[id]; }
 
-/** Date parsing helpers for labels like "Sun Mar 2" */
+/** Date parsing for labels like "Mon Mar 3" */
 const monthMap = { Jan:0, Feb:1, Mar:2, Apr:3, May:4, Jun:5, Jul:6, Aug:7, Sep:8, Oct:9, Nov:10, Dec:11 };
 function dateKeyFromLabel(label){
-  // label format: "Sun Mar 2" or "Tue Apr 15"
   const parts = label.trim().split(/\s+/);
   const mon = monthMap[parts[1]];
   const day = parseInt(parts[2], 10);
   const d = new Date(Date.UTC(YEAR, mon, day));
-  return d.toISOString().slice(0,10); // YYYY-MM-DD
+  return d.toISOString().slice(0,10);
 }
 function todayKey(){
   const now = new Date();
-  // Use local date, but map to YYYY-MM-DD
   const d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const iso = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())).toISOString().slice(0,10);
-  return iso;
+  return new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())).toISOString().slice(0,10);
 }
 
-/** Plan data */
+/** Plan data — starts Mar 3 */
 const plan = [
-  { week: "Week 1", range: "Mar 2–Mar 8", days: [
-    { date: "Sun Mar 2", items: [
-      "Shoulder routine (12–15 min)",
-      "Walk 30 min (walk pad ok)",
-      "Light mobility 8–10 min (hips/ankles/thoracic)"
-    ]},
+  { week: "Week 1", range: "Mar 3–Mar 8", days: [
     { date: "Mon Mar 3", items: [
-      "Shoulder routine",
+      "Shoulder routine (12–15 min)",
+      "Walk 30 min (during the day)",
       "Ladder Monday Upper (modified)",
-      "Jiu Jitsu class",
-      "Optional: 10–20 min easy walk after JJ"
+      "Jiu Jitsu class"
     ]},
     { date: "Tue Mar 4", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Tuesday Leg (modified)",
-      "Knee mini-routine (mandatory)",
-      "Walk 30 min"
+      "Knee mini-routine (mandatory)"
     ]},
     { date: "Wed Mar 5", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Wednesday Upper (modified chest-safe)",
-      "Jiu Jitsu class",
-      "Optional: 5 min thoracic mobility before bed"
+      "Jiu Jitsu class"
     ]},
     { date: "Thu Mar 6", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Thursday Leg (modified)",
       "Knee mini-routine (mandatory)",
       "Intervals: 6 x (1:00 hard / 1:00 easy)"
     ]},
     { date: "Fri Mar 7", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Friday Pull (modified)",
-      "Zone 2: 35–40 min incline walk (nose-breathable)"
+      "Zone 2: 35–40 min incline walk (can replace the 30-min walk)"
     ]},
     { date: "Sat Mar 8", items: [
       "Shoulder routine",
-      "Open Mat (optional) — moderate rounds OR Zone 2: 40 min",
-      "Walk 30 min total if Open Mat is skipped"
+      "Walk 30 min (during the day) OR Zone 2: 40 min",
+      "Open Mat (optional) — moderate rounds"
     ]},
   ]},
   { week: "Week 2", range: "Mar 9–Mar 15", days: [
     { date: "Sun Mar 9", items: [
       "Shoulder routine",
-      "Walk 30 min",
+      "Walk 30 min (during the day)",
       "Light mobility 8–10 min"
     ]},
     { date: "Mon Mar 10", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Monday Upper (modified)",
       "Jiu Jitsu class"
     ]},
     { date: "Tue Mar 11", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Tuesday Leg (modified)",
-      "Knee mini-routine (mandatory)",
-      "Walk 30 min"
+      "Knee mini-routine (mandatory)"
     ]},
     { date: "Wed Mar 12", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Wednesday Upper (modified chest-safe)",
       "Jiu Jitsu class"
     ]},
     { date: "Thu Mar 13", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Thursday Leg (modified)",
       "Knee mini-routine (mandatory)",
       "Intervals: 6 x (1:00 hard / 1:00 easy)"
     ]},
     { date: "Fri Mar 14", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Friday Pull (modified)",
-      "Zone 2: 40 min incline walk"
+      "Zone 2: 40 min incline walk (can replace the 30-min walk)"
     ]},
     { date: "Sat Mar 15", items: [
       "Shoulder routine",
-      "Open Mat (optional) — moderate OR Zone 2: 40 min"
+      "Walk 30 min (during the day) OR Zone 2: 40 min",
+      "Open Mat (optional) — moderate"
     ]},
   ]},
   { week: "Week 3", range: "Mar 16–Mar 22", days: [
     { date: "Sun Mar 16", items: [
       "Shoulder routine",
-      "Walk 30 min",
+      "Walk 30 min (during the day)",
       "Mobility 8–10 min"
     ]},
     { date: "Mon Mar 17", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Monday Upper (modified)",
       "Jiu Jitsu class"
     ]},
     { date: "Tue Mar 18", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Tuesday Leg (modified)",
-      "Knee mini-routine (mandatory)",
-      "Walk 30 min"
+      "Knee mini-routine (mandatory)"
     ]},
     { date: "Wed Mar 19", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Wednesday Upper (modified chest-safe)",
       "Jiu Jitsu class"
     ]},
     { date: "Thu Mar 20", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Thursday Leg (modified)",
       "Knee mini-routine (mandatory)",
       "Intervals: 5 x (2:00 hard / 1:00 easy)"
     ]},
     { date: "Fri Mar 21", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Friday Pull (modified)",
-      "Zone 2: 40 min incline walk"
+      "Zone 2: 40 min incline walk (can replace the 30-min walk)"
     ]},
     { date: "Sat Mar 22", items: [
       "Shoulder routine",
-      "Open Mat (optional) — moderate-to-hard OR Zone 2: 45 min"
+      "Walk 30 min (during the day) OR Zone 2: 45 min",
+      "Open Mat (optional) — moderate-to-hard"
     ]},
   ]},
   { week: "Week 4", range: "Mar 23–Mar 29", days: [
     { date: "Sun Mar 23", items: [
       "Shoulder routine",
-      "Walk 30 min",
+      "Walk 30 min (during the day)",
       "Mobility 8–10 min"
     ]},
     { date: "Mon Mar 24", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Monday Upper (modified)",
       "Jiu Jitsu class"
     ]},
     { date: "Tue Mar 25", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Tuesday Leg (modified)",
-      "Knee mini-routine (mandatory)",
-      "Walk 30 min"
+      "Knee mini-routine (mandatory)"
     ]},
     { date: "Wed Mar 26", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Wednesday Upper (modified chest-safe)",
       "Jiu Jitsu class"
     ]},
     { date: "Thu Mar 27", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Thursday Leg (modified)",
       "Knee mini-routine (mandatory)",
       "Intervals: 5 x (2:00 hard / 1:00 easy)"
     ]},
     { date: "Fri Mar 28", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Friday Pull (modified)",
-      "Zone 2: 40–45 min incline walk"
+      "Zone 2: 40–45 min incline walk (can replace the 30-min walk)"
     ]},
     { date: "Sat Mar 29", items: [
       "Shoulder routine",
-      "Open Mat (optional) — moderate OR Zone 2: 45 min"
+      "Walk 30 min (during the day) OR Zone 2: 45 min",
+      "Open Mat (optional) — moderate"
     ]},
   ]},
   { week: "Week 5", range: "Mar 30–Apr 5", days: [
     { date: "Sun Mar 30", items: [
       "Shoulder routine",
-      "Walk 30 min",
+      "Walk 30 min (during the day)",
       "Mobility 8–10 min"
     ]},
     { date: "Mon Mar 31", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Monday Upper (modified)",
       "Jiu Jitsu class"
     ]},
     { date: "Tue Apr 1", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Tuesday Leg (modified)",
-      "Knee mini-routine (mandatory)",
-      "Walk 30 min"
+      "Knee mini-routine (mandatory)"
     ]},
     { date: "Wed Apr 2", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Wednesday Upper (modified chest-safe)",
       "Jiu Jitsu class"
     ]},
     { date: "Thu Apr 3", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Thursday Leg (modified)",
       "Knee mini-routine (mandatory)",
       "Intervals: 4 x (3:00 hard / 1:00 easy)"
     ]},
     { date: "Fri Apr 4", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Friday Pull (modified)",
-      "Zone 2: 40 min incline walk"
+      "Zone 2: 40 min incline walk (can replace the 30-min walk)"
     ]},
     { date: "Sat Apr 5", items: [
       "Shoulder routine",
-      "Open Mat (optional) — harder simulation OR Zone 2: 45 min"
+      "Walk 30 min (during the day) OR Zone 2: 45 min",
+      "Open Mat (optional) — harder simulation"
     ]},
   ]},
   { week: "Week 6", range: "Apr 6–Apr 12", days: [
     { date: "Sun Apr 6", items: [
       "Shoulder routine",
-      "Walk 30 min",
+      "Walk 30 min (during the day)",
       "Mobility 8–10 min"
     ]},
     { date: "Mon Apr 7", items: [
       "Shoulder routine",
-      "Ladder Monday Upper (modified) — keep RPE ~7 (no grinders)",
+      "Walk 30 min (during the day)",
+      "Ladder Monday Upper (modified) — keep RPE ~7",
       "Jiu Jitsu class (normal, no extra ego rounds)"
     ]},
     { date: "Tue Apr 8", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Tuesday Leg (modified)",
-      "Knee mini-routine (mandatory)",
-      "Walk 30 min"
+      "Knee mini-routine (mandatory)"
     ]},
     { date: "Wed Apr 9", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Wednesday Upper (modified) — keep it clean",
       "Jiu Jitsu class (normal)"
     ]},
     { date: "Thu Apr 10", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Thursday Leg (modified) — keep RPE ~7",
       "Knee mini-routine (mandatory)",
       "Intervals: 3 x (5:00 match pace / 1:00 easy)"
     ]},
     { date: "Fri Apr 11", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Friday Pull (modified)",
-      "Zone 2: 35–40 min incline walk"
+      "Zone 2: 35–40 min incline walk (can replace the 30-min walk)"
     ]},
     { date: "Sat Apr 12", items: [
       "Shoulder routine",
-      "Open Mat (optional) — moderate only OR Zone 2: 35 min"
+      "Walk 30 min (during the day) OR Zone 2: 35 min",
+      "Open Mat (optional) — moderate only"
     ]},
   ]},
   { week: "Week 7 (Taper)", range: "Apr 13–Apr 17", days: [
     { date: "Sun Apr 13", items: [
       "Shoulder routine",
-      "Walk 30–40 min",
+      "Walk 30–40 min (during the day)",
       "Mobility 10 min",
       "Early bedtime"
     ]},
     { date: "Mon Apr 14", items: [
       "Shoulder routine",
-      "Ladder Monday Upper (modified) — HALF SETS (easy clean work)",
+      "Walk 30 min (during the day)",
+      "Ladder Monday Upper (modified) — HALF SETS",
       "JJ: light technique only"
     ]},
     { date: "Tue Apr 15", items: [
       "Shoulder routine",
+      "Walk 30 min (during the day)",
       "Ladder Tuesday Leg (modified) — HALF SETS",
-      "Knee mini-routine — REDUCED (2 sets each)",
-      "Walk 30 min"
+      "Knee mini-routine — REDUCED (2 sets each)"
     ]},
     { date: "Wed Apr 16", items: [
       "Shoulder routine",
-      "Ladder Wednesday Upper (modified) — LIGHT (2 sets each main)",
+      "Walk 30 min (during the day)",
+      "Ladder Wednesday Upper (modified) — LIGHT",
       "JJ: flow/drill only",
       "Breathing: 10 min (inhale 4s / exhale 6s)"
     ]},
     { date: "Thu Apr 17", items: [
       "Shoulder routine",
-      "NO lifting. NO intervals.",
-      "Walk 20–30 min easy",
+      "Walk 20–30 min easy (during the day)",
       "Mobility 10 min",
-      "Pack + relax + early sleep"
+      "Pack + relax + early sleep",
+      "NO lifting. NO intervals."
     ]},
   ]},
 ];
@@ -470,10 +487,7 @@ function render(){
 
   // highlight today if within range
   highlightToday();
-
-  // store current week index (for print current week)
   window.__currentWeekIndex = currentWeekIndex;
-
   renderProgress();
 }
 
@@ -510,7 +524,7 @@ function scrollToToday(){
   const tKey = todayKey();
   const el = document.querySelector(`.day[data-datekey="${tKey}"]`);
   if (!el){
-    alert("Today is outside Mar 2–Apr 17, 2026 (or your device date is different).");
+    alert("Today is outside Mar 3–Apr 17, 2026 (or your device date is different).");
     return;
   }
   el.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -521,11 +535,9 @@ function printWeek(wi){
   document.querySelectorAll(".week").forEach(w => w.classList.remove("print-target"));
   const target = document.querySelector(`.week[data-week-index="${wi}"]`);
   if (target) target.classList.add("print-target");
-  // Expand this week for printing
   const days = target.querySelector(".days");
   days.style.display = "grid";
   window.print();
-  // Cleanup after print (small delay so print dialog can open)
   setTimeout(() => {
     document.body.removeAttribute("data-print-week");
     target.classList.remove("print-target");
@@ -534,7 +546,7 @@ function printWeek(wi){
 
 function printCurrentWeek(){
   if (window.__currentWeekIndex === null || window.__currentWeekIndex === undefined){
-    alert("Today is not within Mar 2–Apr 17, 2026 on this device date. Use “Print this week” on the week header instead.");
+    alert("Today is not within Mar 3–Apr 17, 2026 on this device date. Use “Print this week” on the week header instead.");
     return;
   }
   printWeek(window.__currentWeekIndex);
@@ -542,7 +554,6 @@ function printCurrentWeek(){
 
 document.getElementById("todayBtn").onclick = () => { highlightToday(); scrollToToday(); };
 document.getElementById("printCurrentWeekBtn").onclick = () => printCurrentWeek();
-
 document.getElementById("expandAll").onclick = () => {
   document.querySelectorAll(".week .days").forEach(d => d.style.display = "grid");
   document.querySelectorAll(".week h2 .right button:last-child").forEach(b => b.textContent = "Collapse");
@@ -558,7 +569,6 @@ document.getElementById("resetAll").onclick = () => {
   render();
 };
 
-// First render and auto-jump if today is within the plan
 render();
 setTimeout(() => {
   const el = document.querySelector(`.day[data-datekey="${todayKey()}"]`);
